@@ -3,8 +3,8 @@ export type Snippet = {
   title: string;
   prefix: string;
   description: string;
-  body: string;
-  languages: string[];
+  body: string | string[];
+  languages: string;
   createdAt: string;
   updatedAt: string;
 };

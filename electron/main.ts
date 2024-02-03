@@ -3,27 +3,13 @@ import { readdir } from "node:fs";
 import path from "node:path";
 import { Snippet } from "../src/types";
 import { Db } from "../src/services/db";
+import { SnippetsStore } from "../src/services/snippetsStore";
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.js
-// │
+
 process.env.DIST = path.join(__dirname, "../dist");
 process.env.VITE_PUBLIC = app.isPackaged
   ? process.env.DIST
   : path.join(process.env.DIST, "../public");
-
-readdir(
-  "/Users/eden_lane/Library/Application Support/Code/User/snippets/",
-  (err, files) => {
-    console.log("Files", err, files);
-  }
-);
 
 let win: BrowserWindow | null;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -70,12 +56,31 @@ app.on("activate", () => {
 
 app.whenReady().then(() => {
   ipcMain.handle("addSnippet", async (_, snippet: Snippet) => {
-    console.log("addSnippet", snippet);
     try {
       await Db.addSnippet(snippet);
     } catch (error) {
       console.log(error);
     }
+  });
+
+  ipcMain.handle("getSnippets", async () => {
+    try {
+      return await Db.getSnippets();
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  ipcMain.handle("installSnippet", async (_, snippet: Snippet) => {
+    SnippetsStore.installSnippet(snippet);
+  });
+
+  ipcMain.handle("uninstallSnippet", async (_, snippet: Snippet) => {
+    SnippetsStore.uninstallSnippet(snippet);
+  });
+
+  ipcMain.handle("isSnippetInstalled", async (_, snippet: Snippet) => {
+    return SnippetsStore.isSnippetInstalled(snippet);
   });
 
   createWindow();

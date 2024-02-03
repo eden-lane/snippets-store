@@ -1,22 +1,42 @@
 import { useForm } from 'react-hook-form';
 import { Box } from '../../../ui/components/Box';
 import { nanoid } from 'nanoid';
+import Editor from '@monaco-editor/react';
+import type monaco from 'monaco-editor';
+import { useRef } from 'react';
+
 type FormValues = {
   title: string;
   prefix: string;
   description: string;
-  body: string;
-  languages: string[];
+  languages: string;
 };
 
-export const SnippetForm = () => {
+type Props = {
+  onAdd: () => void;
+};
+
+export const SnippetForm = (props: Props) => {
+  const { onAdd } = props;
+  
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const form = useForm<FormValues>();
 
   const onSubmit = (data: FormValues) => {
-    window.api.addSnippet({
-      id: nanoid(),
-      ...data,
-    });
+    const body = editorRef.current?.getValue() || '';
+
+    if (body) {
+      window.api.addSnippet({
+        ...data,
+        body,
+        id: nanoid(),
+      });
+    }
+    onAdd();
+  };
+
+  const handleEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
+    editorRef.current = editor;
   };
 
   return (
@@ -41,8 +61,12 @@ export const SnippetForm = () => {
           />
         </Box>
         <Box direction="column" alignItems="flex-start">
-          <label htmlFor="body">Body</label>
-          <textarea id="body" {...form.register('body')} />
+          <label>Body</label>
+          <Editor
+            height="300px"
+            defaultLanguage="javascript"
+            onMount={handleEditorMount}
+          />
         </Box>
         <Box direction="column" alignItems="flex-start">
           <label htmlFor="languages">Languages</label>

@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from "path";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { sql } from "drizzle-orm";
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";

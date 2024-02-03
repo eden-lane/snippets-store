@@ -10,7 +10,9 @@
     "rebuild": "electron rebuild.js"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
     "better-sqlite3": "^9.2.2",
+    "comment-json": "^4.2.3",
     "drizzle-orm": "^0.29.3",
     "nanoid": "^5.0.4",
     "react": "^18.2.0",
