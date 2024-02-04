@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import Editor from '@monaco-editor/react';
 import type monaco from 'monaco-editor';
 import { useRef } from 'react';
+import styled from 'styled-components';
 
 type FormValues = {
   title: string;
@@ -18,7 +19,7 @@ type Props = {
 
 export const SnippetForm = (props: Props) => {
   const { onAdd } = props;
-  
+
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const form = useForm<FormValues>();
 
@@ -40,18 +41,17 @@ export const SnippetForm = (props: Props) => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <MainForm onSubmit={form.handleSubmit(onSubmit)}>
       <Box direction="column" gap={8}>
-        <Box justifyContent="space-between" gap={8}>
-          <Box direction="column" alignItems="flex-start">
-            <label htmlFor="title">Title</label>
-            <input id="title" type="text" {...form.register('title')} />
-          </Box>
-          <Box direction="column" alignItems="flex-start">
-            <label htmlFor="prefix">Prefix</label>
-            <input id="prefix" type="text" {...form.register('prefix')} />
-          </Box>
+        <Box direction="column" alignItems="flex-start">
+          <label htmlFor="title">Name</label>
+          <input id="title" type="text" {...form.register('title')} />
         </Box>
+        <Box direction="column" alignItems="flex-start">
+          <label htmlFor="prefix">Prefix</label>
+          <input id="prefix" type="text" {...form.register('prefix')} />
+        </Box>
+
         <Box direction="column" alignItems="flex-start">
           <label htmlFor="description">Description</label>
           <input
@@ -76,6 +76,18 @@ export const SnippetForm = (props: Props) => {
           <button type="submit">Submit</button>
         </Box>
       </Box>
-    </form>
+    </MainForm>
   );
 };
+
+const MainForm = styled.form`
+  height: 580px;
+  width: 644px;
+  background: #212334;
+  margin-top: 75px;
+  margin-left: 16px;
+  padding-left: 15px;
+  padding-top: 13px;
+  display: flex;
+  flex-direction: column;
+`;
