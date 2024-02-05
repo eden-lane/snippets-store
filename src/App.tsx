@@ -52,4 +52,6 @@ export default App;
 const Root = styled.main`
   display: flex;
   box-shadow: 0px 2px 4.5px 0px #00000040;
+  width: 100%;
+  height: 100%;
 `;
