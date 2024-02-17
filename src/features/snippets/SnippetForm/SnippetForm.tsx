@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { Box } from '../../../ui/components/Box';
 import { nanoid } from 'nanoid';
-import Editor from '@monaco-editor/react';
-import type monaco from 'monaco-editor';
-import { useRef } from 'react';
+import CodeEditor from '@uiw/react-textarea-code-editor';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 type FormValues = {
@@ -18,26 +17,20 @@ type Props = {
 };
 
 export const SnippetForm = (props: Props) => {
+  const [value, setValue] = useState('');
   const { onAdd } = props;
 
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const form = useForm<FormValues>();
 
   const onSubmit = (data: FormValues) => {
-    const body = editorRef.current?.getValue() || '';
-
-    if (body) {
+    if (value) {
       window.api.addSnippet({
         ...data,
-        body,
+        body: value,
         id: nanoid(),
       });
     }
     onAdd();
-  };
-
-  const handleEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
-    editorRef.current = editor;
   };
 
   return (
@@ -62,11 +55,20 @@ export const SnippetForm = (props: Props) => {
         </Box>
         <Box direction="column" alignItems="flex-start">
           <label>Body</label>
-          <Editor
-            height="300px"
-            defaultLanguage="javascript"
-            onMount={handleEditorMount}
-          />
+          <EditorWrapper>
+            <CodeEditor
+              value={value}
+              language="jsx"
+              placeholder="Please enter JS code."
+              onChange={(evn) => setValue(evn.target.value)}
+              padding={15}
+              data-color-mode="dark"
+              style={{
+                fontFamily:
+                  'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              }}
+            />
+          </EditorWrapper>
         </Box>
         <Box direction="column" alignItems="flex-start">
           <label htmlFor="languages">Languages</label>
@@ -90,4 +92,9 @@ const MainForm = styled.form`
   padding-top: 13px;
   display: flex;
   flex-direction: column;
+`;
+
+const EditorWrapper = styled.div`
+  flex-grow: 1;
+  align-self: stretch;
 `;
