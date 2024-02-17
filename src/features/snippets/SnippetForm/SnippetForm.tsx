@@ -41,8 +41,8 @@ export const SnippetForm = (props: Props) => {
   };
 
   return (
-    <MainForm onSubmit={form.handleSubmit(onSubmit)}>
-      <Box direction="column" gap={8}>
+    <Root onSubmit={form.handleSubmit(onSubmit)}>
+      <Box direction="column" gap={8} grow={1}>
         <Box direction="column" alignItems="flex-start">
           <label htmlFor="title">Name</label>
           <BoxInput id="title" type="text" {...form.register('title')} />
@@ -60,7 +60,7 @@ export const SnippetForm = (props: Props) => {
             {...form.register('description')}
           />
         </Box>
-        <Box direction="column" alignItems="flex-start">
+        <Box direction="column" alignItems="flex-start" grow={1}>
           <label>Body</label>
           <Editor
             height="300px"
@@ -82,25 +82,20 @@ export const SnippetForm = (props: Props) => {
           </Box>
         </Box>
       </Box>
-    </MainForm>
+    </Root>
   );
 };
 
-const MainForm = styled.form`
-  margin-top: 16px;
-  margin-left: 16px;
-  padding-left: 15px;
-  padding-top: 13px;
-  padding-bottom: 16px;
-  padding-right: 10px;
+const Root = styled.form`
+  box-sizing: border-box;
+  padding: 16px;
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  width: 100%;
   font-size: 12px;
   background: #212334;
   box-sizing: content-box;
-  margin-right: 16px;
+  margin: 0;
 `;
 
 const BoxInput = styled.input`
