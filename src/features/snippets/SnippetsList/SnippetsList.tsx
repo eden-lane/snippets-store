@@ -43,15 +43,15 @@ export const SnippetsList = (props: Props) => {
 
 const Root = styled.ul`
   display: flex;
+  align-self: stretch;
   flex-direction: column;
   background: #212334;
   list-style-type: none;
   width: 240px;
   height: 100%;
   border-radius: 4px;
-  margin-top: 16px;
-  margin-left: 16px;
   padding: 8px 12px;
+  margin: 0;
   gap: 8px;
   flex-shrink: 0;
 `;
