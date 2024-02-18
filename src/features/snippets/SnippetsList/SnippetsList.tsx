@@ -42,14 +42,18 @@ export const SnippetsList = (props: Props) => {
 };
 
 const Root = styled.ul`
+  display: flex;
+  align-self: stretch;
+  flex-direction: column;
   background: #212334;
   list-style-type: none;
   width: 240px;
-  height: 610px;
+  height: 100%;
   border-radius: 4px;
-  padding-left: 0;
-  padding-top: 55px;
-  margin-top: 45px;
+  padding: 8px 12px;
+  margin: 0;
+  gap: 8px;
+  flex-shrink: 0;
 `;
 
 const Line = styled.li`
@@ -57,12 +61,10 @@ const Line = styled.li`
   display: flex;
   flex-direction: column;
   height: 38px;
-  width: 224px;
-  background: #1f2130;
   font-size: 12px;
   justify-content: start;
-  margin: 8px 18px;
   align-items: flex-start;
+  padding: 4px 8px;
 `;
 
 const SnippetPrefix = styled.em`
