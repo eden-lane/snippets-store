@@ -1,14 +1,15 @@
-import { useForm } from 'react-hook-form';
-import { Box } from '../../../ui/components/Box';
-import { nanoid } from 'nanoid';
-import CodeEditor from '@uiw/react-textarea-code-editor';
-import { useState } from 'react';
 import styled from 'styled-components';
+import { useForm, Controller } from 'react-hook-form';
+import { Box } from '../../../ui/components/Box';
+import { Input } from '../../../ui/components/Input';
+import { nanoid } from 'nanoid';
+import { Editor } from '../../../ui/components/Editor/Editor';
 
 type FormValues = {
   title: string;
   prefix: string;
   description: string;
+  body: string;
   languages: string;
 };
 
@@ -17,65 +18,66 @@ type Props = {
 };
 
 export const SnippetForm = (props: Props) => {
-  const [value, setValue] = useState('');
   const { onAdd } = props;
 
   const form = useForm<FormValues>();
 
   const onSubmit = (data: FormValues) => {
-    if (value) {
-      window.api.addSnippet({
-        ...data,
-        body: value,
-        id: nanoid(),
-      });
-    }
+    window.api.addSnippet({
+      ...data,
+      id: nanoid(),
+    });
     onAdd();
   };
 
   return (
     <Root onSubmit={form.handleSubmit(onSubmit)}>
       <Box direction="column" gap={8} grow={1}>
-        <Box direction="column" alignItems="flex-start">
+        <Box direction="column" gap={4} alignItems="flex-start">
           <label htmlFor="title">Name</label>
-          <BoxInput id="title" type="text" {...form.register('title')} />
-        </Box>
-        <Box direction="column" alignItems="flex-start">
-          <label htmlFor="prefix">Prefix</label>
-          <BoxInput id="prefix" type="text" {...form.register('prefix')} />
-        </Box>
-
-        <Box direction="column" alignItems="flex-start">
-          <label htmlFor="description">Description</label>
-          <BoxInput
-            id="description"
-            type="text"
-            {...form.register('description')}
+          <Controller
+            control={form.control}
+            name="title"
+            render={({ field }) => <Input id="title" {...field} />}
           />
         </Box>
-        <Box direction="column" alignItems="flex-start" grow={1}>
-          <label>Body</label>
-          <EditorWrapper>
-            <CodeEditor
-              value={value}
-              language="jsx"
-              placeholder="Please enter JS code."
-              onChange={(evn) => setValue(evn.target.value)}
-              padding={15}
-              data-color-mode="dark"
-              style={{
-                fontFamily:
-                  'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-              }}
-            />
-          </EditorWrapper>
+        <Box direction="column" gap={4} alignItems="flex-start">
+          <label htmlFor="prefix">Prefix</label>
+          <Controller
+            control={form.control}
+            name="prefix"
+            render={({ field }) => <Input id="prefix" {...field} />}
+          />
         </Box>
-        <Box direction="column" alignItems="flex-start">
+
+        <Box direction="column" gap={4} alignItems="flex-start">
+          <label htmlFor="description">Description</label>
+          <Controller
+            control={form.control}
+            name="description"
+            render={({ field }) => <Input id="description" {...field} />}
+          />
+        </Box>
+        <Box direction="column" gap={4} alignItems="flex-start" grow={1}>
+          <label>Body</label>
+          <Controller
+            control={form.control}
+            name="body"
+            render={({ field }) => (
+              <Editor
+                {...field}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </Box>
+        <Box direction="column" gap={4} alignItems="flex-start">
           <label htmlFor="languages">Languages</label>
-          <BoxInput
-            id="languages"
-            type="text"
-            {...form.register('languages')}
+          <Controller
+            control={form.control}
+            name="languages"
+            render={({ field }) => <Input id="languages" {...field} />}
           />
         </Box>
         <Box justifyContent="flex-end">
@@ -100,16 +102,6 @@ const Root = styled.form`
   margin: 0;
 `;
 
-const BoxInput = styled.input`
-  width: 100%;
-  height: 26px;
-  background: #181a2d;
-  border: 0;
-  box-sizing: border-box;
-  border-radius: 4px;
-  color: white;
-`;
-
 const SaveButton = styled.button`
   background: #2e3257;
   color: white;
@@ -120,9 +112,4 @@ const SaveButton = styled.button`
   display: flex;
   justify-content: center;
   flex-direction: row-reverse;
-`;
-
-const EditorWrapper = styled.div`
-  flex-grow: 1;
-  align-self: stretch;
 `;
