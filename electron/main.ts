@@ -63,6 +63,14 @@ app.whenReady().then(() => {
     }
   });
 
+  ipcMain.handle("deleteSnippet", async (_, id: string) => {
+    try {
+      await Db.deleteSnippet(id);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   ipcMain.handle("getSnippets", async () => {
     try {
       return await Db.getSnippets();

@@ -9,8 +9,6 @@ const snippetsDir = `${homeDir}/Library/Application Support/Code/User/snippets`;
 
 export class SnippetsStore {
   static installSnippet(snippet: Snippet) {
-    console.log(snippet);
-
     snippet.languages.split(',').forEach((lang) => {
       const snippetFile = `${snippetsDir}/${lang}.json`;
       const file = readFileSync(snippetFile, 'utf-8');

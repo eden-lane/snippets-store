@@ -4,6 +4,8 @@ import { Box } from '../../../ui/components/Box';
 import { Input } from '../../../ui/components/Input';
 import { nanoid } from 'nanoid';
 import { Editor } from '../../../ui/components/Editor/Editor';
+import { Snippet } from '../../../types';
+import { useEffect } from 'react';
 
 type FormValues = {
   title: string;
@@ -15,12 +17,31 @@ type FormValues = {
 
 type Props = {
   onAdd: () => void;
+  snippet?: Snippet;
 };
 
 export const SnippetForm = (props: Props) => {
-  const { onAdd } = props;
+  const { onAdd, snippet } = props;
 
-  const form = useForm<FormValues>();
+  const form = useForm<FormValues>({
+    defaultValues: {
+      title: snippet?.title || '',
+      prefix: snippet?.prefix || '',
+      description: snippet?.description || '',
+      body: snippet?.body || '',
+      languages: snippet?.languages || '',
+    },
+  });
+
+  useEffect(() => {
+    form.reset({
+      title: snippet?.title || '',
+      prefix: snippet?.prefix || '',
+      description: snippet?.description || '',
+      body: snippet?.body || '',
+      languages: snippet?.languages || '',
+    });
+  }, [snippet]);
 
   const onSubmit = (data: FormValues) => {
     window.api.addSnippet({
@@ -28,6 +49,10 @@ export const SnippetForm = (props: Props) => {
       id: nanoid(),
     });
     onAdd();
+  };
+
+  const handleDelete = () => {
+    // window.api.deleteSnippet();
   };
 
   return (
@@ -80,10 +105,15 @@ export const SnippetForm = (props: Props) => {
             render={({ field }) => <Input id="languages" {...field} />}
           />
         </Box>
-        <Box justifyContent="flex-end">
-          <Box direction="column" alignItems="flex-start">
-            <SaveButton type="submit">Save</SaveButton>
-          </Box>
+        <Box
+          direction="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+        >
+          <DeleteButton type="button" onClick={handleDelete}>
+            Delete
+          </DeleteButton>
+          <SaveButton type="submit">Save</SaveButton>
         </Box>
       </Box>
     </Root>
@@ -102,8 +132,7 @@ const Root = styled.form`
   margin: 0;
 `;
 
-const SaveButton = styled.button`
-  background: #2e3257;
+const Button = styled.button`
   color: white;
   width: 140px;
   height: 28px;
@@ -111,5 +140,12 @@ const SaveButton = styled.button`
   font-size: 12px;
   display: flex;
   justify-content: center;
-  flex-direction: row-reverse;
+`;
+
+const SaveButton = styled(Button)`
+  background: #2e3257;
+`;
+
+const DeleteButton = styled(Button)`
+  background: #e04848;
 `;

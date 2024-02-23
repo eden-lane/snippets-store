@@ -2,13 +2,15 @@ import styled from 'styled-components';
 import { Snippet } from '../../../types';
 
 type Props = {
+  selected?: Snippet;
+  onSelect: (snippet: Snippet) => void;
   snippets: Snippet[];
   onInstall: (snippet: Snippet) => void;
   onUninstall: (snippet: Snippet) => void;
 };
 
 export const SnippetsList = (props: Props) => {
-  const { snippets, onInstall, onUninstall } = props;
+  const { selected, onSelect, snippets, onInstall, onUninstall } = props;
 
   const handleChange =
     (snippet: Snippet) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +24,7 @@ export const SnippetsList = (props: Props) => {
   return (
     <Root>
       {snippets?.map((snippet) => (
-        <Line key={snippet.id}>
+        <Line key={snippet.id} onClick={() => onSelect(snippet)}>
           <div>
             {/* <input
               type="checkbox"
@@ -65,6 +67,10 @@ const Line = styled.li`
   justify-content: start;
   align-items: flex-start;
   padding: 4px 8px;
+
+  &:hover {
+    background: #181a2d;
+  }
 `;
 
 const SnippetPrefix = styled.em`

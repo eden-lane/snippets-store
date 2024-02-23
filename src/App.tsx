@@ -6,7 +6,9 @@ import { Snippet } from './types';
 import styled from 'styled-components';
 
 function App() {
+  const [selected, setSelected] = useState<Snippet>();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
+  console.log(selected)
 
   async function getSnippets() {
     const snippets = await window.api.getSnippets();
@@ -38,11 +40,13 @@ function App() {
     <Root>
       <SnippetsList
         snippets={snippets}
+        selected={selected}
+        onSelect={setSelected}
         onInstall={handleInstall}
         onUninstall={handleUninstall}
       />
 
-      <SnippetForm onAdd={getSnippets} />
+      <SnippetForm onAdd={getSnippets} snippet={selected} />
     </Root>
   );
 }
