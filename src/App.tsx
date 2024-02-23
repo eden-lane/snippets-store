@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { SnippetForm } from './features/snippets/SnippetForm/SnippetForm';
 import { SnippetsList } from './features/snippets/SnippetsList/SnippetsList';
-import { Snippet } from './types';
+import { Snippet, SnippetDraft } from './types';
 import styled from 'styled-components';
 
 function App() {
-  const [selected, setSelected] = useState<Snippet>();
+  const [selected, setSelected] = useState<Snippet | SnippetDraft>();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  console.log(selected)
 
   async function getSnippets() {
     const snippets = await window.api.getSnippets();
@@ -28,6 +27,25 @@ function App() {
     getSnippets();
   }, []);
 
+  const handleAdd = () => {
+    setSelected({});
+  };
+
+  const handleCreate = async (snippet: Snippet) => {
+    await window.api.createSnippet(snippet);
+    getSnippets();
+  };
+
+  const handleUpdate = async (snippet: Snippet) => {
+    await window.api.updateSnippet(snippet);
+    getSnippets();
+  };
+
+  const handleDelete = async (id: string) => {
+    await window.api.deleteSnippet(id);
+    getSnippets();
+  };
+
   const handleInstall = (snippet: Snippet) => {
     window.api.installSnippet(snippet);
   };
@@ -41,12 +59,18 @@ function App() {
       <SnippetsList
         snippets={snippets}
         selected={selected}
+        onAdd={handleAdd}
         onSelect={setSelected}
         onInstall={handleInstall}
         onUninstall={handleUninstall}
       />
 
-      <SnippetForm onAdd={getSnippets} snippet={selected} />
+      <SnippetForm
+        onCreate={handleCreate}
+        onDelete={handleDelete}
+        onUpdate={handleUpdate}
+        snippet={selected}
+      />
     </Root>
   );
 }

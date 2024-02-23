@@ -4,8 +4,9 @@ import { Box } from '../../../ui/components/Box';
 import { Input } from '../../../ui/components/Input';
 import { nanoid } from 'nanoid';
 import { Editor } from '../../../ui/components/Editor/Editor';
-import { Snippet } from '../../../types';
+import { Snippet, SnippetDraft } from '../../../types';
 import { useEffect } from 'react';
+import { isExistingSnippet } from '../../../utils/isExistingSnippet';
 
 type FormValues = {
   title: string;
@@ -16,12 +17,14 @@ type FormValues = {
 };
 
 type Props = {
-  onAdd: () => void;
-  snippet?: Snippet;
+  onCreate: (snippet: Snippet) => void;
+  onUpdate: (snippet: Snippet) => void;
+  onDelete: (id: string) => void;
+  snippet?: Snippet | SnippetDraft;
 };
 
 export const SnippetForm = (props: Props) => {
-  const { onAdd, snippet } = props;
+  const { onCreate, onUpdate, onDelete, snippet } = props;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -44,15 +47,30 @@ export const SnippetForm = (props: Props) => {
   }, [snippet]);
 
   const onSubmit = (data: FormValues) => {
-    window.api.addSnippet({
-      ...data,
-      id: nanoid(),
-    });
-    onAdd();
+    if (!snippet) {
+      return;
+    }
+
+    if (isExistingSnippet(snippet)) {
+      onUpdate({
+        ...snippet,
+        ...data,
+        updatedAt: new Date().toISOString(),
+      });
+    } else {
+      onCreate({
+        ...data,
+        id: nanoid(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    }
   };
 
   const handleDelete = () => {
-    // window.api.deleteSnippet();
+    if (isExistingSnippet(snippet)) {
+      onDelete(snippet.id);
+    }
   };
 
   return (
@@ -110,9 +128,11 @@ export const SnippetForm = (props: Props) => {
           justifyContent="space-between"
           alignItems="flex-start"
         >
-          <DeleteButton type="button" onClick={handleDelete}>
-            Delete
-          </DeleteButton>
+          {isExistingSnippet(snippet) && (
+            <DeleteButton type="button" onClick={handleDelete}>
+              Delete
+            </DeleteButton>
+          )}
           <SaveButton type="submit">Save</SaveButton>
         </Box>
       </Box>

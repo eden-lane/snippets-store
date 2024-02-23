@@ -5,8 +5,14 @@ import { Snippet } from '../src/types';
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));
 
 contextBridge.exposeInMainWorld('api', {
-  addSnippet: async (snippet: Snippet) => {
+  createSnippet: async (snippet: Snippet) => {
     return await ipcRenderer.invoke('addSnippet', snippet);
+  },
+  updateSnippet: async (snippet: Snippet) => {
+    return await ipcRenderer.invoke('updateSnippet', snippet);
+  },
+  deleteSnippet: async (id: string) => {
+    return await ipcRenderer.invoke('deleteSnippet', id);
   },
   getSnippets: async () => {
     return await ipcRenderer.invoke('getSnippets');

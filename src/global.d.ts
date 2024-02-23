@@ -3,7 +3,8 @@ import { Snippet, SnippetCreate } from './types';
 declare global {
   interface Window {
     api: {
-      addSnippet: (snippet: SnippetCreate) => void;
+      createSnippet: (snippet: SnippetCreate) => void;
+      updateSnippet: (snippet: Snippet) => void;
       deleteSnippet: (id: string) => void;
       getSnippets: () => Promise<Snippet[]>;
       installSnippet: (snippet: Snippet) => void;

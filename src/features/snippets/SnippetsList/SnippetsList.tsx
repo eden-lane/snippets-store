@@ -1,16 +1,18 @@
 import styled from 'styled-components';
-import { Snippet } from '../../../types';
+import { Snippet, SnippetDraft } from '../../../types';
+import { Button } from '../../../ui/components/Button/Button';
 
 type Props = {
-  selected?: Snippet;
-  onSelect: (snippet: Snippet) => void;
+  selected?: Snippet | SnippetDraft;
   snippets: Snippet[];
+  onAdd: () => void;
+  onSelect: (snippet: Snippet) => void;
   onInstall: (snippet: Snippet) => void;
   onUninstall: (snippet: Snippet) => void;
 };
 
 export const SnippetsList = (props: Props) => {
-  const { selected, onSelect, snippets, onInstall, onUninstall } = props;
+  const { selected, onSelect, snippets, onAdd, onInstall, onUninstall } = props;
 
   const handleChange =
     (snippet: Snippet) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +26,11 @@ export const SnippetsList = (props: Props) => {
   return (
     <Root>
       {snippets?.map((snippet) => (
-        <Line key={snippet.id} onClick={() => onSelect(snippet)}>
+        <ListItem
+          key={snippet.id}
+          selected={snippet === selected}
+          onClick={() => onSelect(snippet)}
+        >
           <div>
             {/* <input
               type="checkbox"
@@ -37,8 +43,9 @@ export const SnippetsList = (props: Props) => {
             <SnippetPrefix>{snippet.prefix}</SnippetPrefix>
             {/* <Component /> */}
           </div>
-        </Line>
+        </ListItem>
       ))}
+      <Button onClick={onAdd}>Add snippet</Button>
     </Root>
   );
 };
@@ -58,8 +65,7 @@ const Root = styled.ul`
   flex-shrink: 0;
 `;
 
-const Line = styled.li`
-  font: inter;
+const ListItem = styled.li<{ selected?: boolean }>`
   display: flex;
   flex-direction: column;
   height: 38px;
@@ -67,6 +73,9 @@ const Line = styled.li`
   justify-content: start;
   align-items: flex-start;
   padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: 1px solid ${(p) => (p.selected ? '#8250df' : 'transparent')};
 
   &:hover {
     background: #181a2d;

@@ -32,6 +32,16 @@ export class Db {
     });
   }
 
+  static async updateSnippet(snippet: Snippet) {
+    return await db
+      .update(snippets)
+      .set({
+        ...snippet,
+        languages: [snippet.languages],
+      })
+      .where(eq(snippets.id, snippet.id));
+  }
+
   static async deleteSnippet(id: string) {
     return await db.delete(snippets).where(eq(snippets.id, id));
   }

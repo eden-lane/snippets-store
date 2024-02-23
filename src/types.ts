@@ -9,4 +9,6 @@ export type Snippet = {
   updatedAt: string;
 };
 
+export type SnippetDraft = Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'>;
+
 export type SnippetCreate = Omit<Snippet, 'createdAt' | 'updatedAt'>;

@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { Snippet } from '../types';
+import { Snippet, SnippetDraft } from '../types';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { assign, parse, stringify } from 'comment-json';
 
