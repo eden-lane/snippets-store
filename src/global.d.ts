@@ -8,7 +8,7 @@ declare global {
       deleteSnippet: (id: string) => void;
       getSnippets: () => Promise<Snippet[]>;
       installSnippet: (snippet: Snippet) => void;
-      uninstallSnippet: (snippet: Snippet) => void;
+      uninstallSnippet: (id: string) => void;
       isSnippetInstalled: (snippet: Snippet) => string[];
     };
   }

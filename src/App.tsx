@@ -3,12 +3,12 @@ import './App.css';
 import { SnippetForm } from './features/snippets/SnippetForm/SnippetForm';
 import { SnippetsList } from './features/snippets/SnippetsList/SnippetsList';
 import { Snippet, SnippetDraft } from './types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 function App() {
   const [selected, setSelected] = useState<Snippet | SnippetDraft>();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-
+  
   async function getSnippets() {
     const snippets = await window.api.getSnippets();
     snippets.forEach(async (snippet: Snippet) => {
@@ -48,10 +48,12 @@ function App() {
 
   const handleInstall = (snippet: Snippet) => {
     window.api.installSnippet(snippet);
+    getSnippets();
   };
 
-  const handleUninstall = (snippet: Snippet) => {
-    window.api.uninstallSnippet(snippet);
+  const handleUninstall = (id: string) => {
+    window.api.uninstallSnippet(id);
+    getSnippets();
   };
 
   return (
@@ -69,6 +71,8 @@ function App() {
         onCreate={handleCreate}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
+        onInstall={handleInstall}
+        onUninstall={handleUninstall}
         snippet={selected}
       />
     </Root>

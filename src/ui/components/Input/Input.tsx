@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import styled from 'styled-components';
 import { InputWrapper } from '../InputWrapper';
 
@@ -6,7 +7,7 @@ type Props = {
   onChange?: (value: string) => void;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export const Input = (props: Props) => {
+export const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { value, onChange, ...rest } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,10 +16,10 @@ export const Input = (props: Props) => {
 
   return (
     <InputWrapper>
-      <Root {...rest} value={value} onChange={handleChange} />
+      <Root {...rest} ref={ref} value={value} onChange={handleChange} />
     </InputWrapper>
   );
-};
+});
 
 const Root = styled.input`
   width: 100%;

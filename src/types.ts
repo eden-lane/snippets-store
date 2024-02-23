@@ -4,7 +4,7 @@ export type Snippet = {
   prefix: string;
   description: string;
   body: string;
-  languages: string;
+  languages: string[];
   createdAt: string;
   updatedAt: string;
 };

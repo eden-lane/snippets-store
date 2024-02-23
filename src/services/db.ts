@@ -28,7 +28,7 @@ export class Db {
   static async addSnippet(snippet: Snippet) {
     return await db.insert(snippets).values({
       ...snippet,
-      languages: [snippet.languages],
+      languages: snippet.languages.split(',')
     });
   }
 
